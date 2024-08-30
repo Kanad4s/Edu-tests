@@ -2,6 +2,10 @@ package main
 
 import "fmt"
 
+func div(a, b int) (int, error) {
+	return a / b, nil
+}
+
 func main() {
 	for i := 0; i < 7; i++ {
 		if i%2 == 0 {
