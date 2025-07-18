@@ -1,46 +1,31 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"strings"
-	"unicode"
 )
 
 func main() {
-	// var text string
-	// text := "The quick brown fox jumps over the lazy dog."
-	var text2 string
-	text2 = "Go, go, go! Let's learn Go programming."
-	mapa := CountWordFrequency(text2)
-	fmt.Println(mapa)
+	// Read input from standard input
+	scanner := bufio.NewScanner(os.Stdin)
+	if scanner.Scan() {
+		input := scanner.Text()
+
+		// Call the ReverseString function
+		output := ReverseString(input)
+
+		// Print the result
+		fmt.Println(output)
+	}
 }
 
-func CountWordFrequency(text string) map[string]int {
-	wordFreq := map[string]int{}
-	text = strings.ToLower(text)
-	// startIdx := 0
-	isWord := false
-	var word strings.Builder
-	for _, char := range text {
-		if unicode.IsLetter(char) || unicode.IsNumber(char) || char == '\'' {
-			if char == '\'' {
-				continue
-			}
-			if !isWord {
-				isWord = true
-			}
-			word.WriteRune(char)
-		} else {
-			if isWord {
-				wordFreq[word.String()]++
-			}
-			isWord = false
-			word = strings.Builder{}
-		}
-		// fmt.Printf("%#U, %d\n", char, idx)
+// ReverseString returns the reversed string of s.
+func ReverseString(s string) string {
+	var reverse strings.Builder
+	for i := len(s) - 1; i >= 0; i-- {
+		reverse.WriteByte(s[i])
 	}
-	if isWord {
-		wordFreq[word.String()]++
-	}
-	return wordFreq
+	return reverse.String()
 }
