@@ -1,0 +1,818 @@
+[
+  {
+    "id": "Mul_0_0_0",
+    "op": "Mul",
+    "args": [
+      0,
+      0,
+      0
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_1_0",
+    "op": "Mul",
+    "args": [
+      0,
+      1,
+      0
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_2_0",
+    "op": "Mul",
+    "args": [
+      0,
+      2,
+      0
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_0_1",
+    "op": "Mul",
+    "args": [
+      0,
+      0,
+      1
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_1_1",
+    "op": "Mul",
+    "args": [
+      0,
+      1,
+      1
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_2_1",
+    "op": "Mul",
+    "args": [
+      0,
+      2,
+      1
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_0_2",
+    "op": "Mul",
+    "args": [
+      0,
+      0,
+      2
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_1_2",
+    "op": "Mul",
+    "args": [
+      0,
+      1,
+      2
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_2_2",
+    "op": "Mul",
+    "args": [
+      0,
+      2,
+      2
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_0_3",
+    "op": "Mul",
+    "args": [
+      0,
+      0,
+      3
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_1_3",
+    "op": "Mul",
+    "args": [
+      0,
+      1,
+      3
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_2_3",
+    "op": "Mul",
+    "args": [
+      0,
+      2,
+      3
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_0_4",
+    "op": "Mul",
+    "args": [
+      0,
+      0,
+      4
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_1_4",
+    "op": "Mul",
+    "args": [
+      0,
+      1,
+      4
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_2_4",
+    "op": "Mul",
+    "args": [
+      0,
+      2,
+      4
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_0_5",
+    "op": "Mul",
+    "args": [
+      0,
+      0,
+      5
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_1_5",
+    "op": "Mul",
+    "args": [
+      0,
+      1,
+      5
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_0_2_5",
+    "op": "Mul",
+    "args": [
+      0,
+      2,
+      5
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_0_0",
+    "op": "Mul",
+    "args": [
+      1,
+      0,
+      0
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_1_0",
+    "op": "Mul",
+    "args": [
+      1,
+      1,
+      0
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_2_0",
+    "op": "Mul",
+    "args": [
+      1,
+      2,
+      0
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_0_1",
+    "op": "Mul",
+    "args": [
+      1,
+      0,
+      1
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_1_1",
+    "op": "Mul",
+    "args": [
+      1,
+      1,
+      1
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_2_1",
+    "op": "Mul",
+    "args": [
+      1,
+      2,
+      1
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_0_2",
+    "op": "Mul",
+    "args": [
+      1,
+      0,
+      2
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_1_2",
+    "op": "Mul",
+    "args": [
+      1,
+      1,
+      2
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_2_2",
+    "op": "Mul",
+    "args": [
+      1,
+      2,
+      2
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_0_3",
+    "op": "Mul",
+    "args": [
+      1,
+      0,
+      3
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_1_3",
+    "op": "Mul",
+    "args": [
+      1,
+      1,
+      3
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_2_3",
+    "op": "Mul",
+    "args": [
+      1,
+      2,
+      3
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_0_4",
+    "op": "Mul",
+    "args": [
+      1,
+      0,
+      4
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_1_4",
+    "op": "Mul",
+    "args": [
+      1,
+      1,
+      4
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_2_4",
+    "op": "Mul",
+    "args": [
+      1,
+      2,
+      4
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_0_5",
+    "op": "Mul",
+    "args": [
+      1,
+      0,
+      5
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_1_5",
+    "op": "Mul",
+    "args": [
+      1,
+      1,
+      5
+    ],
+    "edges": null
+  },
+  {
+    "id": "Mul_1_2_5",
+    "op": "Mul",
+    "args": [
+      1,
+      2,
+      5
+    ],
+    "edges": null
+  },
+  {
+    "id": "Sum_0_0_0",
+    "op": "Sum",
+    "args": [
+      0,
+      0,
+      0
+    ],
+    "edges": [
+      "Mul_0_0_0"
+    ]
+  },
+  {
+    "id": "Sum_0_0_1",
+    "op": "Sum",
+    "args": [
+      0,
+      0,
+      1
+    ],
+    "edges": [
+      "Sum_0_0_0",
+      "Mul_0_1_0"
+    ]
+  },
+  {
+    "id": "Sum_0_0_2",
+    "op": "Sum",
+    "args": [
+      0,
+      0,
+      2
+    ],
+    "edges": [
+      "Sum_0_0_1",
+      "Mul_0_2_0"
+    ]
+  },
+  {
+    "id": "Sum_0_1_0",
+    "op": "Sum",
+    "args": [
+      0,
+      1,
+      0
+    ],
+    "edges": [
+      "Mul_0_0_1"
+    ]
+  },
+  {
+    "id": "Sum_0_1_1",
+    "op": "Sum",
+    "args": [
+      0,
+      1,
+      1
+    ],
+    "edges": [
+      "Sum_0_1_0",
+      "Mul_0_1_1"
+    ]
+  },
+  {
+    "id": "Sum_0_1_2",
+    "op": "Sum",
+    "args": [
+      0,
+      1,
+      2
+    ],
+    "edges": [
+      "Sum_0_1_1",
+      "Mul_0_2_1"
+    ]
+  },
+  {
+    "id": "Sum_0_2_0",
+    "op": "Sum",
+    "args": [
+      0,
+      2,
+      0
+    ],
+    "edges": [
+      "Mul_0_0_2"
+    ]
+  },
+  {
+    "id": "Sum_0_2_1",
+    "op": "Sum",
+    "args": [
+      0,
+      2,
+      1
+    ],
+    "edges": [
+      "Sum_0_2_0",
+      "Mul_0_1_2"
+    ]
+  },
+  {
+    "id": "Sum_0_2_2",
+    "op": "Sum",
+    "args": [
+      0,
+      2,
+      2
+    ],
+    "edges": [
+      "Sum_0_2_1",
+      "Mul_0_2_2"
+    ]
+  },
+  {
+    "id": "Sum_0_3_0",
+    "op": "Sum",
+    "args": [
+      0,
+      3,
+      0
+    ],
+    "edges": [
+      "Mul_0_0_3"
+    ]
+  },
+  {
+    "id": "Sum_0_3_1",
+    "op": "Sum",
+    "args": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      "Sum_0_3_0",
+      "Mul_0_1_3"
+    ]
+  },
+  {
+    "id": "Sum_0_3_2",
+    "op": "Sum",
+    "args": [
+      0,
+      3,
+      2
+    ],
+    "edges": [
+      "Sum_0_3_1",
+      "Mul_0_2_3"
+    ]
+  },
+  {
+    "id": "Sum_0_4_0",
+    "op": "Sum",
+    "args": [
+      0,
+      4,
+      0
+    ],
+    "edges": [
+      "Mul_0_0_4"
+    ]
+  },
+  {
+    "id": "Sum_0_4_1",
+    "op": "Sum",
+    "args": [
+      0,
+      4,
+      1
+    ],
+    "edges": [
+      "Sum_0_4_0",
+      "Mul_0_1_4"
+    ]
+  },
+  {
+    "id": "Sum_0_4_2",
+    "op": "Sum",
+    "args": [
+      0,
+      4,
+      2
+    ],
+    "edges": [
+      "Sum_0_4_1",
+      "Mul_0_2_4"
+    ]
+  },
+  {
+    "id": "Sum_0_5_0",
+    "op": "Sum",
+    "args": [
+      0,
+      5,
+      0
+    ],
+    "edges": [
+      "Mul_0_0_5"
+    ]
+  },
+  {
+    "id": "Sum_0_5_1",
+    "op": "Sum",
+    "args": [
+      0,
+      5,
+      1
+    ],
+    "edges": [
+      "Sum_0_5_0",
+      "Mul_0_1_5"
+    ]
+  },
+  {
+    "id": "Sum_0_5_2",
+    "op": "Sum",
+    "args": [
+      0,
+      5,
+      2
+    ],
+    "edges": [
+      "Sum_0_5_1",
+      "Mul_0_2_5"
+    ]
+  },
+  {
+    "id": "Sum_1_0_0",
+    "op": "Sum",
+    "args": [
+      1,
+      0,
+      0
+    ],
+    "edges": [
+      "Mul_1_0_0"
+    ]
+  },
+  {
+    "id": "Sum_1_0_1",
+    "op": "Sum",
+    "args": [
+      1,
+      0,
+      1
+    ],
+    "edges": [
+      "Sum_1_0_0",
+      "Mul_1_1_0"
+    ]
+  },
+  {
+    "id": "Sum_1_0_2",
+    "op": "Sum",
+    "args": [
+      1,
+      0,
+      2
+    ],
+    "edges": [
+      "Sum_1_0_1",
+      "Mul_1_2_0"
+    ]
+  },
+  {
+    "id": "Sum_1_1_0",
+    "op": "Sum",
+    "args": [
+      1,
+      1,
+      0
+    ],
+    "edges": [
+      "Mul_1_0_1"
+    ]
+  },
+  {
+    "id": "Sum_1_1_1",
+    "op": "Sum",
+    "args": [
+      1,
+      1,
+      1
+    ],
+    "edges": [
+      "Sum_1_1_0",
+      "Mul_1_1_1"
+    ]
+  },
+  {
+    "id": "Sum_1_1_2",
+    "op": "Sum",
+    "args": [
+      1,
+      1,
+      2
+    ],
+    "edges": [
+      "Sum_1_1_1",
+      "Mul_1_2_1"
+    ]
+  },
+  {
+    "id": "Sum_1_2_0",
+    "op": "Sum",
+    "args": [
+      1,
+      2,
+      0
+    ],
+    "edges": [
+      "Mul_1_0_2"
+    ]
+  },
+  {
+    "id": "Sum_1_2_1",
+    "op": "Sum",
+    "args": [
+      1,
+      2,
+      1
+    ],
+    "edges": [
+      "Sum_1_2_0",
+      "Mul_1_1_2"
+    ]
+  },
+  {
+    "id": "Sum_1_2_2",
+    "op": "Sum",
+    "args": [
+      1,
+      2,
+      2
+    ],
+    "edges": [
+      "Sum_1_2_1",
+      "Mul_1_2_2"
+    ]
+  },
+  {
+    "id": "Sum_1_3_0",
+    "op": "Sum",
+    "args": [
+      1,
+      3,
+      0
+    ],
+    "edges": [
+      "Mul_1_0_3"
+    ]
+  },
+  {
+    "id": "Sum_1_3_1",
+    "op": "Sum",
+    "args": [
+      1,
+      3,
+      1
+    ],
+    "edges": [
+      "Sum_1_3_0",
+      "Mul_1_1_3"
+    ]
+  },
+  {
+    "id": "Sum_1_3_2",
+    "op": "Sum",
+    "args": [
+      1,
+      3,
+      2
+    ],
+    "edges": [
+      "Sum_1_3_1",
+      "Mul_1_2_3"
+    ]
+  },
+  {
+    "id": "Sum_1_4_0",
+    "op": "Sum",
+    "args": [
+      1,
+      4,
+      0
+    ],
+    "edges": [
+      "Mul_1_0_4"
+    ]
+  },
+  {
+    "id": "Sum_1_4_1",
+    "op": "Sum",
+    "args": [
+      1,
+      4,
+      1
+    ],
+    "edges": [
+      "Sum_1_4_0",
+      "Mul_1_1_4"
+    ]
+  },
+  {
+    "id": "Sum_1_4_2",
+    "op": "Sum",
+    "args": [
+      1,
+      4,
+      2
+    ],
+    "edges": [
+      "Sum_1_4_1",
+      "Mul_1_2_4"
+    ]
+  },
+  {
+    "id": "Sum_1_5_0",
+    "op": "Sum",
+    "args": [
+      1,
+      5,
+      0
+    ],
+    "edges": [
+      "Mul_1_0_5"
+    ]
+  },
+  {
+    "id": "Sum_1_5_1",
+    "op": "Sum",
+    "args": [
+      1,
+      5,
+      1
+    ],
+    "edges": [
+      "Sum_1_5_0",
+      "Mul_1_1_5"
+    ]
+  },
+  {
+    "id": "Sum_1_5_2",
+    "op": "Sum",
+    "args": [
+      1,
+      5,
+      2
+    ],
+    "edges": [
+      "Sum_1_5_1",
+      "Mul_1_2_5"
+    ]
+  }
+]
