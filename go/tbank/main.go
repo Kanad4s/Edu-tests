@@ -2,94 +2,67 @@ package main
 
 import (
 	"fmt"
+	"slices"
 )
 
-func main() {
-	// var a int
-	// a = 5
-	// fmt.Println(a / 2)
-	// Example sorted array for testing
-	arr := []int{1, 3, 5, 7, 9, 11, 13, 15, 17, 19}
-
-	// Test binary search
-	target := 8
-	index := BinarySearch(arr, target)
-	fmt.Printf("BinarySearch: %d found at index %d\n", target, index)
-
-	// Test recursive binary search
-	recursiveIndex := BinarySearchRecursive(arr, target, 0, len(arr)-1)
-	fmt.Printf("BinarySearchRecursive: %d found at index %d\n", target, recursiveIndex)
-
-	// Test find insert position
-	insertTarget := 8
-	insertPos := FindInsertPosition(arr, insertTarget)
-	fmt.Printf("FindInsertPosition: %d should be inserted at index %d\n", insertTarget, insertPos)
+type Employee struct {
+	ID     int
+	Name   string
+	Age    int
+	Salary float64
 }
 
-// BinarySearch performs a standard binary search to find the target in the sorted array.
-// Returns the index of the target if found, or -1 if not found.
-func BinarySearch(arr []int, target int) int {
-	if len(arr) == 0 {
-		return -1
-	}
-	var mid int
-	high := len(arr) - 1
-	low := 0
-	for low <= high {
-		mid = (low + high) / 2
-		fmt.Println(mid, low, high)
-		if arr[mid] == target {
-			return mid
-		}
-		if arr[mid] > target {
-			high = mid - 1
-		} else if arr[mid] < target {
-			low = mid + 1
-		} else {
-			return mid
+type Manager struct {
+	Employees []Employee
+}
+
+// AddEmployee adds a new employee to the manager's list.
+func (m *Manager) AddEmployee(e Employee) {
+	m.Employees = append(m.Employees, e)
+}
+
+// RemoveEmployee removes an employee by ID from the manager's list.
+func (m *Manager) RemoveEmployee(id int) {
+	for idx, emp := range m.Employees {
+		if emp.ID == id {
+			m.Employees = slices.Delete(m.Employees, idx, idx+1)
 		}
 	}
-	return -1
 }
 
-// BinarySearchRecursive performs binary search using recursion.
-// Returns the index of the target if found, or -1 if not found.
-func BinarySearchRecursive(arr []int, target int, left int, right int) int {
-	if len(arr) == 0 || left > right {
-		return -1
-	}
-	mid := (left + right) / 2
-	if target == arr[mid] {
-		return mid
-	}
-	if target > arr[mid] {
-		return BinarySearchRecursive(arr, target, mid+1, right)
-	} else {
-		return BinarySearchRecursive(arr, target, left, mid-1)
-	}
-}
-
-// FindInsertPosition returns the index where the target should be inserted
-// to maintain the sorted order of the array.
-func FindInsertPosition(arr []int, target int) int {
-	if len(arr) == 0 {
+// GetAverageSalary calculates the average salary of all employees.
+func (m *Manager) GetAverageSalary() float64 {
+	if len(m.Employees) == 0 {
 		return 0
 	}
-	var mid int
-	high := len(arr) - 1
-	low := 0
-	for low <= high {
-		mid = (low + high) / 2
-		if arr[mid] == target {
-			return -1
-		}
-		if arr[mid] > target {
-			high = mid - 1
-		} else if arr[mid] < target {
-			low = mid + 1
-		} else {
-			return mid + 1
+	var avgSal float64
+	for _, emp := range m.Employees {
+		avgSal += emp.Salary
+	}
+	avgSal /= float64(len(m.Employees))
+	return avgSal
+}
+
+// FindEmployeeByID finds and returns an employee by their ID.
+func (m *Manager) FindEmployeeByID(id int) *Employee {
+	for idx, emp := range m.Employees {
+		if emp.ID == id {
+			return &m.Employees[idx]
 		}
 	}
-	return low
+	return nil
+}
+
+func main() {
+	manager := Manager{}
+	manager.AddEmployee(Employee{ID: 1, Name: "Alice", Age: 30, Salary: 70000})
+	manager.AddEmployee(Employee{ID: 2, Name: "Bob", Age: 25, Salary: 65000})
+	manager.RemoveEmployee(1)
+	averageSalary := manager.GetAverageSalary()
+	employee := manager.FindEmployeeByID(2)
+
+	fmt.Printf("Average Salary: %f\n", averageSalary)
+	if employee != nil {
+		fmt.Printf("Employee found: %+v\n", *employee)
+	}
 }
