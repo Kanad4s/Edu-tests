@@ -1,31 +1,95 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"strings"
 )
 
 func main() {
-	// Read input from standard input
-	scanner := bufio.NewScanner(os.Stdin)
-	if scanner.Scan() {
-		input := scanner.Text()
+	// var a int
+	// a = 5
+	// fmt.Println(a / 2)
+	// Example sorted array for testing
+	arr := []int{1, 3, 5, 7, 9, 11, 13, 15, 17, 19}
 
-		// Call the ReverseString function
-		output := ReverseString(input)
+	// Test binary search
+	target := 8
+	index := BinarySearch(arr, target)
+	fmt.Printf("BinarySearch: %d found at index %d\n", target, index)
 
-		// Print the result
-		fmt.Println(output)
+	// Test recursive binary search
+	recursiveIndex := BinarySearchRecursive(arr, target, 0, len(arr)-1)
+	fmt.Printf("BinarySearchRecursive: %d found at index %d\n", target, recursiveIndex)
+
+	// Test find insert position
+	insertTarget := 8
+	insertPos := FindInsertPosition(arr, insertTarget)
+	fmt.Printf("FindInsertPosition: %d should be inserted at index %d\n", insertTarget, insertPos)
+}
+
+// BinarySearch performs a standard binary search to find the target in the sorted array.
+// Returns the index of the target if found, or -1 if not found.
+func BinarySearch(arr []int, target int) int {
+	if len(arr) == 0 {
+		return -1
+	}
+	var mid int
+	high := len(arr) - 1
+	low := 0
+	for low <= high {
+		mid = (low + high) / 2
+		fmt.Println(mid, low, high)
+		if arr[mid] == target {
+			return mid
+		}
+		if arr[mid] > target {
+			high = mid - 1
+		} else if arr[mid] < target {
+			low = mid + 1
+		} else {
+			return mid
+		}
+	}
+	return -1
+}
+
+// BinarySearchRecursive performs binary search using recursion.
+// Returns the index of the target if found, or -1 if not found.
+func BinarySearchRecursive(arr []int, target int, left int, right int) int {
+	if len(arr) == 0 || left > right {
+		return -1
+	}
+	mid := (left + right) / 2
+	if target == arr[mid] {
+		return mid
+	}
+	if target > arr[mid] {
+		return BinarySearchRecursive(arr, target, mid+1, right)
+	} else {
+		return BinarySearchRecursive(arr, target, left, mid-1)
 	}
 }
 
-// ReverseString returns the reversed string of s.
-func ReverseString(s string) string {
-	var reverse strings.Builder
-	for i := len(s) - 1; i >= 0; i-- {
-		reverse.WriteByte(s[i])
+// FindInsertPosition returns the index where the target should be inserted
+// to maintain the sorted order of the array.
+func FindInsertPosition(arr []int, target int) int {
+	if len(arr) == 0 {
+		return 0
 	}
-	return reverse.String()
+	var mid int
+	high := len(arr) - 1
+	low := 0
+	for low <= high {
+		mid = (low + high) / 2
+		if arr[mid] == target {
+			return -1
+		}
+		if arr[mid] > target {
+			high = mid - 1
+		} else if arr[mid] < target {
+			low = mid + 1
+		} else {
+			return mid + 1
+		}
+	}
+	return low
 }
