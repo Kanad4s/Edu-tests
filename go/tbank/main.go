@@ -2,67 +2,58 @@ package main
 
 import (
 	"fmt"
-	"slices"
+	"net/http"
 )
 
-type Employee struct {
-	ID     int
-	Name   string
-	Age    int
-	Salary float64
-}
+const validToken = "secret"
 
-type Manager struct {
-	Employees []Employee
-}
-
-// AddEmployee adds a new employee to the manager's list.
-func (m *Manager) AddEmployee(e Employee) {
-	m.Employees = append(m.Employees, e)
-}
-
-// RemoveEmployee removes an employee by ID from the manager's list.
-func (m *Manager) RemoveEmployee(id int) {
-	for idx, emp := range m.Employees {
-		if emp.ID == id {
-			m.Employees = slices.Delete(m.Employees, idx, idx+1)
+// AuthMiddleware checks the "X-Auth-Token" header.
+// If it's "secret", call the next handler.
+// Otherwise, respond with 401 Unauthorized.
+func AuthMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		authHeader := r.Header.Get("X-Auth-Token")
+		if authHeader != "secret" {
+			http.Error(w, "", http.StatusUnauthorized)
+			return
 		}
-	}
+
+		next.ServeHTTP(w, r)
+
+		// TODO: Implement the logic:
+		//  1) Grab the "X-Auth-Token" header
+		//  2) Compare against validToken
+		//  3) If mismatch or missing, respond with 401
+		//  4) Otherwise pass to next handler
+	})
 }
 
-// GetAverageSalary calculates the average salary of all employees.
-func (m *Manager) GetAverageSalary() float64 {
-	if len(m.Employees) == 0 {
-		return 0
-	}
-	var avgSal float64
-	for _, emp := range m.Employees {
-		avgSal += emp.Salary
-	}
-	avgSal /= float64(len(m.Employees))
-	return avgSal
+// helloHandler returns "Hello!" on GET /hello
+func helloHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Hello!")
 }
 
-// FindEmployeeByID finds and returns an employee by their ID.
-func (m *Manager) FindEmployeeByID(id int) *Employee {
-	for idx, emp := range m.Employees {
-		if emp.ID == id {
-			return &m.Employees[idx]
-		}
-	}
-	return nil
+// secureHandler returns "You are authorized!" on GET /secure
+func secureHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "You are authorized!")
+}
+
+// SetupServer configures the HTTP routes with the authentication middleware.
+func SetupServer() http.Handler {
+	mux := http.NewServeMux()
+
+	// Public route: /hello (no auth required)
+	mux.HandleFunc("/hello", helloHandler)
+
+	// Secure route: /secure
+	// Wrap with AuthMiddleware
+	secureRoute := http.HandlerFunc(secureHandler)
+	mux.Handle("/secure", AuthMiddleware(secureRoute))
+
+	return mux
 }
 
 func main() {
-	manager := Manager{}
-	manager.AddEmployee(Employee{ID: 1, Name: "Alice", Age: 30, Salary: 70000})
-	manager.AddEmployee(Employee{ID: 2, Name: "Bob", Age: 25, Salary: 65000})
-	manager.RemoveEmployee(1)
-	averageSalary := manager.GetAverageSalary()
-	employee := manager.FindEmployeeByID(2)
-
-	fmt.Printf("Average Salary: %f\n", averageSalary)
-	if employee != nil {
-		fmt.Printf("Employee found: %+v\n", *employee)
-	}
+	// Optional: you can run a real server for local testing
+	// http.ListenAndServe(":8080", SetupServer())
 }
