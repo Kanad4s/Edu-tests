@@ -1,173 +1,248 @@
-package main
+package generics
 
 import (
-	"database/sql"
-	"fmt"
-
-	_ "github.com/mattn/go-sqlite3"
+	"errors"
+	"slices"
 )
 
-// Product represents a product in the inventory system
-type Product struct {
-	ID       int64
-	Name     string
-	Price    float64
-	Quantity int
-	Category string
+// ErrEmptyCollection is returned when an operation cannot be performed on an empty collection
+var ErrEmptyCollection = errors.New("collection is empty")
+
+//
+// 1. Generic Pair
+//
+
+// Pair represents a generic pair of values of potentially different types
+type Pair[T, U any] struct {
+	First  T
+	Second U
 }
 
-// ProductStore manages product operations
-type ProductStore struct {
-	db *sql.DB
+// NewPair creates a new pair with the given values
+func NewPair[T, U any](first T, second U) Pair[T, U] {
+	return Pair[T, U]{First: first, Second: second}
+	// TODO: Implement this function
 }
 
-// NewProductStore creates a new ProductStore with the given database connection
-func NewProductStore(db *sql.DB) *ProductStore {
-	return &ProductStore{db: db}
+// Swap returns a new pair with the elements swapped
+func (p Pair[T, U]) Swap() Pair[U, T] {
+	return Pair[U, T]{First: p.Second, Second: p.First}
+	// TODO: Implement this method
 }
 
-// InitDB sets up a new SQLite database and creates the products table
-func InitDB(dbPath string) (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", dbPath)
-	if err != nil {
-		return nil, err
-	}
-	_, err = db.Exec("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY, name TEXT, price REAL, quantity INTEGER, category TEXT);")
-	if err != nil {
-		return nil, err
-	}
-	return db, nil
+//
+// 2. Generic Stack
+//
+
+// Stack is a generic Last-In-First-Out (LIFO) data structure
+type Stack[T any] struct {
+	// TODO: Add necessary fields
+	elements []T
 }
 
-// CreateProduct adds a new product to the database
-func (ps *ProductStore) CreateProduct(product *Product) error {
-	result, err := ps.db.Exec("INSERT INTO products (name, price, quantity, category) VALUES (?, ?, ?, ?)",
-		product.Name, product.Price, product.Quantity, product.Category)
-	if err != nil {
-		return err
+// NewStack creates a new empty stack
+func NewStack[T any]() *Stack[T] {
+	// TODO: Implement this function
+	return &Stack[T]{elements: make([]T, 0)}
+}
+
+// Push adds an element to the top of the stack
+func (s *Stack[T]) Push(value T) {
+	// TODO: Implement this method
+	s.elements = append(s.elements, value)
+}
+
+// Pop removes and returns the top element from the stack
+// Returns an error if the stack is empty
+func (s *Stack[T]) Pop() (T, error) {
+	// TODO: Implement this method
+	var zero T
+	if len(s.elements) == 0 {
+		return zero, errors.New("")
 	}
-	id, err := result.LastInsertId()
-	if err != nil {
-		return err
+	elem := s.elements[len(s.elements)-1]
+	s.elements = slices.Delete(s.elements, len(s.elements), len(s.elements))
+	return elem, nil
+}
+
+// Peek returns the top element without removing it
+// Returns an error if the stack is empty
+func (s *Stack[T]) Peek() (T, error) {
+	// TODO: Implement this method
+	var zero T
+	if len(s.elements) == 0 {
+		return zero, errors.New("")
 	}
-	product.ID = id
+	return s.elements[len(s.elements)-1], nil
+}
+
+// Size returns the number of elements in the stack
+func (s *Stack[T]) Size() int {
+	// TODO: Implement this method
+	return len(s.elements)
+}
+
+// IsEmpty returns true if the stack contains no elements
+func (s *Stack[T]) IsEmpty() bool {
+	// TODO: Implement this method
+	return len(s.elements) == 0
+}
+
+//
+// 3. Generic Queue
+//
+
+// Queue is a generic First-In-First-Out (FIFO) data structure
+type Queue[T any] struct {
+	elements []T
+	// TODO: Add necessary fields
+}
+
+// NewQueue creates a new empty queue
+func NewQueue[T any]() *Queue[T] {
+	// TODO: Implement this function
+	return &Queue[T]{elements: make([]T, 0)}
+}
+
+// Enqueue adds an element to the end of the queue
+func (q *Queue[T]) Enqueue(value T) {
+	q.elements = append(q.elements, value)
+	// TODO: Implement this method
+}
+
+// Dequeue removes and returns the front element from the queue
+// Returns an error if the queue is empty
+func (q *Queue[T]) Dequeue() (T, error) {
+	// TODO: Implement this method
+	var zero T
+	if len(q.elements) == 0 {
+		return zero, errors.New("")
+	}
+	val := q.elements[0]
+	q.elements = slices.Delete(q.elements, 0, 1)
+	return val, nil
+}
+
+// Front returns the front element without removing it
+// Returns an error if the queue is empty
+func (q *Queue[T]) Front() (T, error) {
+	// TODO: Implement this method
+	var zero T
+	if len(q.elements) == 0 {
+		return zero, errors.New("")
+	}
+	return q.elements[0], nil
+}
+
+// Size returns the number of elements in the queue
+func (q *Queue[T]) Size() int {
+	// TODO: Implement this method
+	return len(q.elements)
+}
+
+// IsEmpty returns true if the queue contains no elements
+func (q *Queue[T]) IsEmpty() bool {
+	// TODO: Implement this method
+	return len(q.elements) == 0
+}
+
+//
+// 4. Generic Set
+//
+
+// Set is a generic collection of unique elements
+type Set[T comparable] struct {
+	elements []T
+}
+
+// NewSet creates a new empty set
+func NewSet[T comparable]() *Set[T] {
+	// TODO: Implement this function
 	return nil
-	// TODO: Insert the product into the database
-	// TODO: Update the product.ID with the database-generated ID
 }
 
-func (ps *ProductStore) GetProduct(id int64) (*Product, error) {
-	row := ps.db.QueryRow("SELECT * FROM products WHERE id = ?", id)
-
-	p := &Product{}
-
-	err := row.Scan(&p.ID, &p.Name, &p.Price, &p.Quantity, &p.Category)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("product with ID %d not found", id)
-		}
-
-		return nil, err
-	}
-
-	// TODO: Query the database for a product with the given ID
-	// TODO: Return a Product struct populated with the data or an error if not found
-	return p, nil
+// Add adds an element to the set if it's not already present
+func (s *Set[T]) Add(value T) {
+	// TODO: Implement this method
 }
 
-// UpdateProduct updates an existing product
-func (ps *ProductStore) UpdateProduct(product *Product) error {
-	_, err := ps.db.Exec("UPDATE products SET name = ?, price = ?, quantity = ?, category = ? WHERE id = ?",
-		product.Name, product.Price, product.Quantity, product.Category, product.ID)
-	if err != nil {
-		return err
-	}
-	// TODO: Update the product in the database
-	// TODO: Return an error if the product doesn't exist
+// Remove removes an element from the set if it exists
+func (s *Set[T]) Remove(value T) {
+	// TODO: Implement this method
+}
+
+// Contains returns true if the set contains the given element
+func (s *Set[T]) Contains(value T) bool {
+	// TODO: Implement this method
+	return false
+}
+
+// Size returns the number of elements in the set
+func (s *Set[T]) Size() int {
+	// TODO: Implement this method
+	return 0
+}
+
+// Elements returns a slice containing all elements in the set
+func (s *Set[T]) Elements() []T {
+	// TODO: Implement this method
 	return nil
 }
 
-// DeleteProduct removes a product by ID
-func (ps *ProductStore) DeleteProduct(id int64) error {
-	_, err := ps.db.Exec("DELETE FROM products WHERE id = ?", id)
-	if err != nil {
-		return err
-	}
+// Union returns a new set containing all elements from both sets
+func Union[T comparable](s1, s2 *Set[T]) *Set[T] {
+	// TODO: Implement this function
 	return nil
-	// TODO: Delete the product from the database
-	// TODO: Return an error if the product doesn't exist
 }
 
-// ListProducts returns all products with optional filtering by category
-func (ps *ProductStore) ListProducts(category string) ([]*Product, error) {
-	var rows *sql.Rows
-	var err error
-	if category == "" {
-		rows, err = ps.db.Query("SELECT * FROM products")
-	} else {
-		rows, err = ps.db.Query("SELECT * FROM products WHERE category = ?", category)
-	}
-	if err != nil {
-		return nil, err
-	}
-
-	var products []*Product
-	for rows.Next() {
-		product := new(Product)
-		err := rows.Scan(&product.ID, &product.Name, &product.Price, &product.Quantity, &product.Category)
-		if err != nil {
-			return nil, err
-		}
-		products = append(products, product)
-	}
-
-	if err = rows.Err(); err != nil {
-		return nil, err
-	}
-	return products, nil
-
-	// TODO: Query the database for products
-	// TODO: If category is not empty, filter by category
-	// TODO: Return a slice of Product pointers
+// Intersection returns a new set containing only elements that exist in both sets
+func Intersection[T comparable](s1, s2 *Set[T]) *Set[T] {
+	// TODO: Implement this function
+	return nil
 }
 
-// BatchUpdateInventory updates the quantity of multiple products in a single transaction
-func (ps *ProductStore) BatchUpdateInventory(updates map[int64]int) error {
-	tx, err := ps.db.Begin()
-
-	stmt, err := tx.Prepare("UPDATE products SET quantity = ? WHERE id = ?")
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-	defer stmt.Close()
-
-	for id, val := range updates {
-		res, err := stmt.Exec(val, id)
-		if err != nil {
-			tx.Rollback()
-			return err
-		}
-
-		rowsAffected, err := res.RowsAffected()
-		if err != nil {
-			tx.Rollback()
-			return err
-		}
-
-		if rowsAffected == 0 {
-			tx.Rollback()
-			return fmt.Errorf("product with ID %d not found", id)
-		}
-	}
-
-	return tx.Commit()
-	// TODO: Start a transaction
-	// TODO: For each product ID in the updates map, update its quantity
-	// TODO: If any update fails, roll back the transaction
-	// TODO: Otherwise, commit the transaction
+// Difference returns a new set with elements in s1 that are not in s2
+func Difference[T comparable](s1, s2 *Set[T]) *Set[T] {
+	// TODO: Implement this function
+	return nil
 }
 
-func main() {
-	// Optional: you can write code here to test your implementation
+//
+// 5. Generic Utility Functions
+//
+
+// Filter returns a new slice containing only the elements for which the predicate returns true
+func Filter[T any](slice []T, predicate func(T) bool) []T {
+	// TODO: Implement this function
+	return nil
+}
+
+// Map applies a function to each element in a slice and returns a new slice with the results
+func Map[T, U any](slice []T, mapper func(T) U) []U {
+	// TODO: Implement this function
+	return nil
+}
+
+// Reduce reduces a slice to a single value by applying a function to each element
+func Reduce[T, U any](slice []T, initial U, reducer func(U, T) U) U {
+	// TODO: Implement this function
+	return initial
+}
+
+// Contains returns true if the slice contains the given element
+func Contains[T comparable](slice []T, element T) bool {
+	// TODO: Implement this function
+	return false
+}
+
+// FindIndex returns the index of the first occurrence of the given element or -1 if not found
+func FindIndex[T comparable](slice []T, element T) int {
+	// TODO: Implement this function
+	return -1
+}
+
+// RemoveDuplicates returns a new slice with duplicate elements removed, preserving order
+func RemoveDuplicates[T comparable](slice []T) []T {
+	// TODO: Implement this function
+	return nil
 }
