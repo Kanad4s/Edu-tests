@@ -1,295 +1,164 @@
-package generics
+package main
 
 import (
-	"cmp"
-	"errors"
-	"slices"
+	"context"
+	"fmt"
+	"time"
 )
 
-// ErrEmptyCollection is returned when an operation cannot be performed on an empty collection
-var ErrEmptyCollection = errors.New("collection is empty")
+// ContextManager defines a simplified interface for basic context operations
+type ContextManager interface {
+	// Create a cancellable context from a parent context
+	CreateCancellableContext(parent context.Context) (context.Context, context.CancelFunc)
 
-//
-// 1. Generic Pair
-//
+	// Create a context with timeout
+	CreateTimeoutContext(parent context.Context, timeout time.Duration) (context.Context, context.CancelFunc)
 
-// Pair represents a generic pair of values of potentially different types
-type Pair[T, U any] struct {
-	First  T
-	Second U
+	// Add a value to context
+	AddValue(parent context.Context, key, value interface{}) context.Context
+
+	// Get a value from context
+	GetValue(ctx context.Context, key interface{}) (interface{}, bool)
+
+	// Execute a task with context cancellation support
+	ExecuteWithContext(ctx context.Context, task func() error) error
+
+	// Wait for context cancellation or completion
+	WaitForCompletion(ctx context.Context, duration time.Duration) error
 }
 
-// NewPair creates a new pair with the given values
-func NewPair[T, U any](first T, second U) Pair[T, U] {
-	return Pair[T, U]{First: first, Second: second}
-	// TODO: Implement this function
+// Simple context manager implementation
+type simpleContextManager struct {
 }
 
-// Swap returns a new pair with the elements swapped
-func (p Pair[T, U]) Swap() Pair[U, T] {
-	return Pair[U, T]{First: p.Second, Second: p.First}
-	// TODO: Implement this method
+// NewContextManager creates a new context manager
+func NewContextManager() ContextManager {
+	return &simpleContextManager{}
 }
 
-//
-// 2. Generic Stack
-//
-
-// Stack is a generic Last-In-First-Out (LIFO) data structure
-type Stack[T any] struct {
-	// TODO: Add necessary fields
-	elements []T
+// CreateCancellableContext creates a cancellable context
+func (cm *simpleContextManager) CreateCancellableContext(parent context.Context) (context.Context, context.CancelFunc) {
+	// TODO: Implement cancellable context creation
+	// Hint: Use context.WithCancel(parent)
+	return context.WithCancel(parent)
 }
 
-// NewStack creates a new empty stack
-func NewStack[T any]() *Stack[T] {
-	// TODO: Implement this function
-	return &Stack[T]{elements: make([]T, 0)}
+// CreateTimeoutContext creates a context with timeout
+func (cm *simpleContextManager) CreateTimeoutContext(parent context.Context, timeout time.Duration) (context.Context, context.CancelFunc) {
+	// TODO: Implement timeout context creation
+	// Hint: Use context.WithTimeout(parent, timeout)
+	return context.WithTimeout(parent, timeout)
 }
 
-// Push adds an element to the top of the stack
-func (s *Stack[T]) Push(value T) {
-	// TODO: Implement this method
-	s.elements = append(s.elements, value)
+// AddValue adds a key-value pair to the context
+func (cm *simpleContextManager) AddValue(parent context.Context, key, value interface{}) context.Context {
+	// TODO: Implement value context creation
+	// Hint: Use context.WithValue(parent, key, value)
+	return context.WithValue(parent, key, value)
 }
 
-// Pop removes and returns the top element from the stack
-// Returns an error if the stack is empty
-func (s *Stack[T]) Pop() (T, error) {
-	// TODO: Implement this method
-	var zero T
-	if len(s.elements) == 0 {
-		return zero, errors.New("")
+// GetValue retrieves a value from the context
+func (cm *simpleContextManager) GetValue(ctx context.Context, key interface{}) (interface{}, bool) {
+	// TODO: Implement value retrieval from context
+	// Hint: Use ctx.Value(key) and check if it's nil
+	// Return the value and a boolean indicating if it was found
+	val := ctx.Value(key)
+	if val == nil {
+		return nil, false
 	}
-	elem := s.elements[len(s.elements)-1]
-	s.elements = slices.Delete(s.elements, len(s.elements)-1, len(s.elements))
-	return elem, nil
+	return val, true
 }
 
-// Peek returns the top element without removing it
-// Returns an error if the stack is empty
-func (s *Stack[T]) Peek() (T, error) {
-	// TODO: Implement this method
-	var zero T
-	if len(s.elements) == 0 {
-		return zero, errors.New("")
+// ExecuteWithContext executes a task that can be cancelled via context
+func (cm *simpleContextManager) ExecuteWithContext(ctx context.Context, task func() error) error {
+	// TODO: Implement task execution with context cancellation
+	// Hint: Run the task in a goroutine and use select with ctx.Done()
+	// Return context error if cancelled, task error if task fails
+	ch := make(chan error, 1)
+	go func() {
+		ch <- task()
+	}()
+
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case err := <-ch:
+		return err
 	}
-	return s.elements[len(s.elements)-1], nil
 }
 
-// Size returns the number of elements in the stack
-func (s *Stack[T]) Size() int {
-	// TODO: Implement this method
-	return len(s.elements)
-}
-
-// IsEmpty returns true if the stack contains no elements
-func (s *Stack[T]) IsEmpty() bool {
-	// TODO: Implement this method
-	return len(s.elements) == 0
-}
-
-//
-// 3. Generic Queue
-//
-
-// Queue is a generic First-In-First-Out (FIFO) data structure
-type Queue[T any] struct {
-	elements []T
-	// TODO: Add necessary fields
-}
-
-// NewQueue creates a new empty queue
-func NewQueue[T any]() *Queue[T] {
-	// TODO: Implement this function
-	return &Queue[T]{elements: make([]T, 0)}
-}
-
-// Enqueue adds an element to the end of the queue
-func (q *Queue[T]) Enqueue(value T) {
-	q.elements = append(q.elements, value)
-	// TODO: Implement this method
-}
-
-// Dequeue removes and returns the front element from the queue
-// Returns an error if the queue is empty
-func (q *Queue[T]) Dequeue() (T, error) {
-	// TODO: Implement this method
-	var zero T
-	if len(q.elements) == 0 {
-		return zero, errors.New("")
+// WaitForCompletion waits for a duration or until context is cancelled
+func (cm *simpleContextManager) WaitForCompletion(ctx context.Context, duration time.Duration) error {
+	// TODO: Implement waiting with context awareness
+	// Hint: Use select with ctx.Done() and time.After(duration)
+	// Return context error if cancelled, nil if duration completes
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-time.After(duration):
+		return nil
 	}
-	val := q.elements[0]
-	q.elements = slices.Delete(q.elements, 0, 1)
-	return val, nil
 }
 
-// Front returns the front element without removing it
-// Returns an error if the queue is empty
-func (q *Queue[T]) Front() (T, error) {
-	// TODO: Implement this method
-	var zero T
-	if len(q.elements) == 0 {
-		return zero, errors.New("")
-	}
-	return q.elements[0], nil
-}
-
-// Size returns the number of elements in the queue
-func (q *Queue[T]) Size() int {
-	// TODO: Implement this method
-	return len(q.elements)
-}
-
-// IsEmpty returns true if the queue contains no elements
-func (q *Queue[T]) IsEmpty() bool {
-	// TODO: Implement this method
-	return len(q.elements) == 0
-}
-
-//
-// 4. Generic Set
-//
-
-// Set is a generic collection of unique elements
-type Set[T comparable] struct {
-	Values []T
-}
-
-// NewSet creates a new empty set
-func NewSet[T comparable]() *Set[T] {
-	// TODO: Implement this function
-	return &Set[T]{Values: make([]T, 0)}
-}
-
-// Add adds an element to the set if it's not already present
-func (s *Set[T]) Add(value T) {
-	if !s.Contains(value) {
-		s.Values = append(s.Values, value)
-	}
-	// TODO: Implement this method
-}
-
-// Remove removes an element from the set if it exists
-func (s *Set[T]) Remove(value T) {
-	i := slices.Index(s.Values, value)
-	if i >= 0 {
-		s.Values = slices.Delete(s.Values, i, i+1)
-	}
-	// TODO: Implement this method
-}
-
-// Contains returns true if the set contains the given element
-func (s *Set[T]) Contains(value T) bool {
-	// TODO: Implement this method
-	return slices.Contains(s.Values, value)
-}
-
-// Size returns the number of elements in the set
-func (s *Set[T]) Size() int {
-	// TODO: Implement this method
-	return len(s.Values)
-}
-
-// Elements returns a slice containing all elements in the set
-func (s *Set[T]) Elements() []T {
-	// TODO: Implement this method
-	return slices.Clone(s.Values)
-}
-
-// Union returns a new set containing all elements from both sets
-func Union[T comparable](s1, s2 *Set[T]) *Set[T] {
-	// TODO: Implement this function
-	res := make([]T, 0, len(s1.Values)+len(s2.Values))
-
-	res = append(res, s2.Values...)
-
-	for _, val := range s1.Values {
-		if !slices.Contains(res, val) {
-			res = append(res, val)
+// Helper function - simulate work that can be cancelled
+func SimulateWork(ctx context.Context, workDuration time.Duration, description string) error {
+	start := time.Now()
+	fmt.Println("start work, ", workDuration, description)
+	sum := 0
+	for time.Since(start) < workDuration {
+		sum += 1
+		fmt.Println("working...")
+		time.Sleep(10 * time.Millisecond)
+		select {
+		case <-ctx.Done():
+			fmt.Println("cancel work")
+			return ctx.Err()
+		default:
+			continue
 		}
 	}
-	return &Set[T]{
-		Values: res,
-	}
+	// TODO: Implement cancellable work simulation
+	// Hint: Use select with ctx.Done() and time.After(workDuration)
+	// Print progress messages and respect cancellation
+	fmt.Println("finish work")
+	return nil
 }
 
-// Intersection returns a new set containing only elements that exist in both sets
-func Intersection[T comparable](s1, s2 *Set[T]) *Set[T] {
-	res := []T{}
-	// TODO: Implement this function
-	for _, val := range s1.Values {
-		if slices.Contains(s2.Values, val) {
-			res = append(res, val)
+// Helper function - process multiple items with context
+func ProcessItems(ctx context.Context, items []string) ([]string, error) {
+	// TODO: Implement batch processing with context awareness
+	// Process each item but check for cancellation between items
+	// Return partial results if cancelled
+	res := make([]string, 0, len(items))
+	for _, val := range items {
+		time.Sleep(100 * time.Millisecond)
+		res = append(res, "processed_"+val)
+		select {
+		case <-ctx.Done():
+			return res, ctx.Err()
+		default:
+			continue
 		}
 	}
-	return &Set[T]{Values: res}
+	return res, nil
 }
 
-// Difference returns a new set with elements in s1 that are not in s2
-func Difference[T comparable](s1, s2 *Set[T]) *Set[T] {
-	res := []T{}
-	// TODO: Implement this function
-	for _, val := range s1.Values {
-		if !slices.Contains(s2.Values, val) {
-			res = append(res, val)
-		}
-	}
-	return &Set[T]{Values: res}
-}
+// Example usage
+func main() {
+	fmt.Println("Context Management Challenge")
+	fmt.Println("Implement the context manager methods!")
 
-//
-// 5. Generic Utility Functions
-//
+	// Example of how the context manager should work:
+	cm := NewContextManager()
 
-// Filter returns a new slice containing only the elements for which the predicate returns true
-func Filter[T any](slice []T, predicate func(T) bool) []T {
-	res := []T{}
-	for _, val := range slice {
-		if predicate(val) {
-			res = append(res, val)
-		}
-	}
-	// TODO: Implement this function
-	return res
-}
+	// Create a cancellable context
+	ctx, cancel := cm.CreateCancellableContext(context.Background())
+	defer cancel()
 
-// Map applies a function to each element in a slice and returns a new slice with the results
-func Map[T, U any](slice []T, mapper func(T) U) []U {
-	// TODO: Implement this function
-	res := make([]U, 0, len(slice))
-	for _, val := range slice {
-		res = append(res, mapper(val))
-	}
-	return res
-}
+	// Add some values
+	ctx = cm.AddValue(ctx, "user", "alice")
+	ctx = cm.AddValue(ctx, "requestID", "12345")
 
-// Reduce reduces a slice to a single value by applying a function to each element
-func Reduce[T, U any](slice []T, initial U, reducer func(U, T) U) U {
-	// TODO: Implement this function
-	for _, val := range slice {
-		initial = reducer(initial, val)
-	}
-	return initial
-}
-
-// Contains returns true if the slice contains the given element
-func Contains[T comparable](slice []T, element T) bool {
-	// TODO: Implement this function
-	return slices.Contains(slice, element)
-}
-
-// FindIndex returns the index of the first occurrence of the given element or -1 if not found
-func FindIndex[T comparable](slice []T, element T) int {
-	// TODO: Implement this function
-	return slices.Index(slice, element)
-}
-
-// RemoveDuplicates returns a new slice with duplicate elements removed, preserving order
-func RemoveDuplicates[T cmp.Ordered](slice []T) []T {
-	// TODO: Implement this function
-	res := slices.Clone(slice)
-	slices.Sort(res)
-	res = slices.Compact(res)
-	return res
+	// Use the context
+	fmt.Println("Context created with values!")
 }
