@@ -1,178 +1,136 @@
-package main
+// Package challenge10 contains the solution for Challenge 10.
+package challenge10
 
 import (
-	"sort"
-	"strings"
-	"time"
+	"fmt"
+	// Add any necessary imports here
 )
 
-// goos: linux
-// goarch: amd64
-// pkg: locals
-// cpu: AMD Ryzen 7 5800H with Radeon Graphics
-// BenchmarkSlowSort-16                    	 8105649	       145.5 ns/op	     128 B/op	       1 allocs/op
-// BenchmarkOptimizedSort-16               	14067753	        87.29 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkInefficientStringBuilder-16    	   66710	     17182 ns/op	   72280 B/op	     271 allocs/op
-// BenchmarkOptimizedStringBuilder-16      	 3352233	       347.0 ns/op	    1016 B/op	       7 allocs/op
-// BenchmarkExpensiveCalculation-16        	     129	   9264574 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkOptimizedCalculation-16        	152214786	         7.904 ns/op	       0 B/op	       0 allocs/op
-// BenchmarkHighAllocationSearch-16        	 4365802	       280.0 ns/op	     280 B/op	       3 allocs/op
-// BenchmarkOptimizedSearch-16             	 6021387	       206.3 ns/op	     256 B/op	       2 allocs/op
-// PASS
-// ok  	locals	12.590s
-
-// SlowSort sorts a slice of integers using a very inefficient algorithm (bubble sort)
-// TODO: Optimize this function to be more efficient
-func SlowSort(data []int) []int {
-	// Make a copy to avoid modifying the original
-	result := make([]int, len(data))
-	copy(result, data)
-
-	// Bubble sort implementation
-	for i := 0; i < len(result); i++ {
-		for j := 0; j < len(result)-1; j++ {
-			if result[j] > result[j+1] {
-				result[j], result[j+1] = result[j+1], result[j]
-			}
-		}
-	}
-
-	return result
+// Shape interface defines methods that all shapes must implement
+type Shape interface {
+	Area() float64
+	Perimeter() float64
+	fmt.Stringer // Includes String() string method
 }
 
-// OptimizedSort is your optimized version of SlowSort
-// It should produce identical results but perform better
-func OptimizedSort(data []int) []int {
-	// TODO: Implement a more efficient sorting algorithm
-	// Hint: Consider using sort package or a more efficient algorithm
-	sort.Ints(data)
-	return data // Replace this with your optimized implementation
+// Rectangle represents a four-sided shape with perpendicular sides
+type Rectangle struct {
+	Width  float64
+	Height float64
 }
 
-// InefficientStringBuilder builds a string by repeatedly concatenating
-// TODO: Optimize this function to be more efficient
-func InefficientStringBuilder(parts []string, repeatCount int) string {
-	result := ""
-
-	for i := 0; i < repeatCount; i++ {
-		for _, part := range parts {
-			result += part
-		}
-	}
-
-	return result
+// NewRectangle creates a new Rectangle with validation
+func NewRectangle(width, height float64) (*Rectangle, error) {
+	// TODO: Implement validation and construction
+	return nil, nil
 }
 
-// OptimizedStringBuilder is your optimized version of InefficientStringBuilder
-// It should produce identical results but perform better
-func OptimizedStringBuilder(parts []string, repeatCount int) string {
-	// TODO: Implement a more efficient string building method
-	// Hint: Consider using strings.Builder or bytes.Buffer
-	result := strings.Builder{}
-	for _, val := range parts {
-		result.WriteString(val)
-
-	}
-	str := result.String()
-	for range repeatCount - 1 {
-		result.WriteString(str)
-	}
-	return result.String() // Replace this with your optimized implementation
+// Area calculates the area of the rectangle
+func (r *Rectangle) Area() float64 {
+	// TODO: Implement area calculation
+	return 0
 }
 
-// ExpensiveCalculation performs a computation with redundant work
-// It computes the sum of all fibonacci numbers up to n
-// TODO: Optimize this function to be more efficient
-func ExpensiveCalculation(n int) int {
-	if n <= 0 {
-		return 0
-	}
-
-	sum := 0
-	for i := 1; i <= n; i++ {
-		sum += fibonacci(i)
-	}
-
-	return sum
+// Perimeter calculates the perimeter of the rectangle
+func (r *Rectangle) Perimeter() float64 {
+	// TODO: Implement perimeter calculation
+	return 0
 }
 
-// Helper function that computes the fibonacci number at position n
-func fibonacci(n int) int {
-	if n <= 1 {
-		return n
-	}
-	return fibonacci(n-1) + fibonacci(n-2)
+// String returns a string representation of the rectangle
+func (r *Rectangle) String() string {
+	// TODO: Implement string representation
+	return ""
 }
 
-// OptimizedCalculation is your optimized version of ExpensiveCalculation
-// It should produce identical results but perform better
-func OptimizedCalculation(n int) int {
-	// TODO: Implement a more efficient calculation method
-	// Hint: Consider memoization or avoiding redundant calculations
-	if n <= 1 {
-		return n
-	}
-	a, b := 1, 0
-	sum := 0
-	for range n - 1 {
-		sum += a
-		a, b = a+b, a
-	}
-	return sum + a // Replace this with your optimized implementation
+// Circle represents a perfectly round shape
+type Circle struct {
+	Radius float64
 }
 
-// HighAllocationSearch searches for all occurrences of a substring and creates a map with their positions
-// TODO: Optimize this function to reduce allocations
-func HighAllocationSearch(text, substr string) map[int]string {
-	result := make(map[int]string)
-
-	// Convert to lowercase for case-insensitive search
-	lowerText := strings.ToLower(text)
-	lowerSubstr := strings.ToLower(substr)
-
-	for i := 0; i < len(lowerText); i++ {
-		// Check if we can fit the substring starting at position i
-		if i+len(lowerSubstr) <= len(lowerText) {
-			// Extract the potential match
-			potentialMatch := lowerText[i : i+len(lowerSubstr)]
-
-			// Check if it matches
-			if potentialMatch == lowerSubstr {
-				// Store the original case version
-				result[i] = text[i : i+len(substr)]
-			}
-		}
-	}
-
-	return result
+// NewCircle creates a new Circle with validation
+func NewCircle(radius float64) (*Circle, error) {
+	// TODO: Implement validation and construction
+	return nil, nil
 }
 
-// OptimizedSearch is your optimized version of HighAllocationSearch
-// It should produce identical results but perform better with fewer allocations
-func OptimizedSearch(text, substr string) map[int]string {
-	// TODO: Implement a more efficient search method with fewer allocations
-	// Hint: Consider avoiding temporary string allocations and reusing memory
-	result := make(map[int]string)
-	if len(substr) == 0 || len(text) < len(substr) {
-		return result
-	}
-	for i := 0; i <= len(text)-len(substr); i++ {
-		if strings.EqualFold(text[i:i+len(substr)], substr) {
-			result[i] = text[i : i+len(substr)]
-		}
-	}
-
-	return result // Replace this with your optimized implementation
+// Area calculates the area of the circle
+func (c *Circle) Area() float64 {
+	// TODO: Implement area calculation
+	return 0
 }
 
-// A function to simulate CPU-intensive work for benchmarking
-// You don't need to optimize this; it's just used for testing
-func SimulateCPUWork(duration time.Duration) {
-	start := time.Now()
-	for time.Since(start) < duration {
-		// Just waste CPU cycles
-		for i := 0; i < 1000000; i++ {
-			_ = i
-		}
-	}
+// Perimeter calculates the circumference of the circle
+func (c *Circle) Perimeter() float64 {
+	// TODO: Implement perimeter calculation
+	return 0
+}
+
+// String returns a string representation of the circle
+func (c *Circle) String() string {
+	// TODO: Implement string representation
+	return ""
+}
+
+// Triangle represents a three-sided polygon
+type Triangle struct {
+	SideA float64
+	SideB float64
+	SideC float64
+}
+
+// NewTriangle creates a new Triangle with validation
+func NewTriangle(a, b, c float64) (*Triangle, error) {
+	// TODO: Implement validation and construction
+	return nil, nil
+}
+
+// Area calculates the area of the triangle using Heron's formula
+func (t *Triangle) Area() float64 {
+	// TODO: Implement area calculation using Heron's formula
+	return 0
+}
+
+// Perimeter calculates the perimeter of the triangle
+func (t *Triangle) Perimeter() float64 {
+	// TODO: Implement perimeter calculation
+	return 0
+}
+
+// String returns a string representation of the triangle
+func (t *Triangle) String() string {
+	// TODO: Implement string representation
+	return ""
+}
+
+// ShapeCalculator provides utility functions for shapes
+type ShapeCalculator struct{}
+
+// NewShapeCalculator creates a new ShapeCalculator
+func NewShapeCalculator() *ShapeCalculator {
+	// TODO: Implement constructor
+	return nil
+}
+
+// PrintProperties prints the properties of a shape
+func (sc *ShapeCalculator) PrintProperties(s Shape) {
+	// TODO: Implement printing shape properties
+}
+
+// TotalArea calculates the sum of areas of all shapes
+func (sc *ShapeCalculator) TotalArea(shapes []Shape) float64 {
+	// TODO: Implement total area calculation
+	return 0
+}
+
+// LargestShape finds the shape with the largest area
+func (sc *ShapeCalculator) LargestShape(shapes []Shape) Shape {
+	// TODO: Implement finding largest shape
+	return nil
+}
+
+// SortByArea sorts shapes by area in ascending or descending order
+func (sc *ShapeCalculator) SortByArea(shapes []Shape, ascending bool) []Shape {
+	// TODO: Implement sorting shapes by area
+	return nil
 }
