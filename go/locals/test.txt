@@ -1,0 +1,14 @@
+goos: linux
+goarch: amd64
+pkg: locals
+cpu: AMD Ryzen 7 5800H with Radeon Graphics         
+BenchmarkSlowSort-16                    	 8105649	       145.5 ns/op	     128 B/op	       1 allocs/op
+BenchmarkOptimizedSort-16               	14067753	        87.29 ns/op	       0 B/op	       0 allocs/op
+BenchmarkInefficientStringBuilder-16    	   66710	     17182 ns/op	   72280 B/op	     271 allocs/op
+BenchmarkOptimizedStringBuilder-16      	 3352233	       347.0 ns/op	    1016 B/op	       7 allocs/op
+BenchmarkExpensiveCalculation-16        	     129	   9264574 ns/op	       0 B/op	       0 allocs/op
+BenchmarkOptimizedCalculation-16        	152214786	         7.904 ns/op	       0 B/op	       0 allocs/op
+BenchmarkHighAllocationSearch-16        	 4365802	       280.0 ns/op	     280 B/op	       3 allocs/op
+BenchmarkOptimizedSearch-16             	 6021387	       206.3 ns/op	     256 B/op	       2 allocs/op
+PASS
+ok  	locals	12.590s

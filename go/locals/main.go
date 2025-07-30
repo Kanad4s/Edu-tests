@@ -1,164 +1,178 @@
 package main
 
 import (
-	"context"
-	"fmt"
+	"sort"
+	"strings"
 	"time"
 )
 
-// ContextManager defines a simplified interface for basic context operations
-type ContextManager interface {
-	// Create a cancellable context from a parent context
-	CreateCancellableContext(parent context.Context) (context.Context, context.CancelFunc)
+// goos: linux
+// goarch: amd64
+// pkg: locals
+// cpu: AMD Ryzen 7 5800H with Radeon Graphics
+// BenchmarkSlowSort-16                    	 8105649	       145.5 ns/op	     128 B/op	       1 allocs/op
+// BenchmarkOptimizedSort-16               	14067753	        87.29 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkInefficientStringBuilder-16    	   66710	     17182 ns/op	   72280 B/op	     271 allocs/op
+// BenchmarkOptimizedStringBuilder-16      	 3352233	       347.0 ns/op	    1016 B/op	       7 allocs/op
+// BenchmarkExpensiveCalculation-16        	     129	   9264574 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkOptimizedCalculation-16        	152214786	         7.904 ns/op	       0 B/op	       0 allocs/op
+// BenchmarkHighAllocationSearch-16        	 4365802	       280.0 ns/op	     280 B/op	       3 allocs/op
+// BenchmarkOptimizedSearch-16             	 6021387	       206.3 ns/op	     256 B/op	       2 allocs/op
+// PASS
+// ok  	locals	12.590s
 
-	// Create a context with timeout
-	CreateTimeoutContext(parent context.Context, timeout time.Duration) (context.Context, context.CancelFunc)
+// SlowSort sorts a slice of integers using a very inefficient algorithm (bubble sort)
+// TODO: Optimize this function to be more efficient
+func SlowSort(data []int) []int {
+	// Make a copy to avoid modifying the original
+	result := make([]int, len(data))
+	copy(result, data)
 
-	// Add a value to context
-	AddValue(parent context.Context, key, value interface{}) context.Context
-
-	// Get a value from context
-	GetValue(ctx context.Context, key interface{}) (interface{}, bool)
-
-	// Execute a task with context cancellation support
-	ExecuteWithContext(ctx context.Context, task func() error) error
-
-	// Wait for context cancellation or completion
-	WaitForCompletion(ctx context.Context, duration time.Duration) error
-}
-
-// Simple context manager implementation
-type simpleContextManager struct {
-}
-
-// NewContextManager creates a new context manager
-func NewContextManager() ContextManager {
-	return &simpleContextManager{}
-}
-
-// CreateCancellableContext creates a cancellable context
-func (cm *simpleContextManager) CreateCancellableContext(parent context.Context) (context.Context, context.CancelFunc) {
-	// TODO: Implement cancellable context creation
-	// Hint: Use context.WithCancel(parent)
-	return context.WithCancel(parent)
-}
-
-// CreateTimeoutContext creates a context with timeout
-func (cm *simpleContextManager) CreateTimeoutContext(parent context.Context, timeout time.Duration) (context.Context, context.CancelFunc) {
-	// TODO: Implement timeout context creation
-	// Hint: Use context.WithTimeout(parent, timeout)
-	return context.WithTimeout(parent, timeout)
-}
-
-// AddValue adds a key-value pair to the context
-func (cm *simpleContextManager) AddValue(parent context.Context, key, value interface{}) context.Context {
-	// TODO: Implement value context creation
-	// Hint: Use context.WithValue(parent, key, value)
-	return context.WithValue(parent, key, value)
-}
-
-// GetValue retrieves a value from the context
-func (cm *simpleContextManager) GetValue(ctx context.Context, key interface{}) (interface{}, bool) {
-	// TODO: Implement value retrieval from context
-	// Hint: Use ctx.Value(key) and check if it's nil
-	// Return the value and a boolean indicating if it was found
-	val := ctx.Value(key)
-	if val == nil {
-		return nil, false
+	// Bubble sort implementation
+	for i := 0; i < len(result); i++ {
+		for j := 0; j < len(result)-1; j++ {
+			if result[j] > result[j+1] {
+				result[j], result[j+1] = result[j+1], result[j]
+			}
+		}
 	}
-	return val, true
+
+	return result
 }
 
-// ExecuteWithContext executes a task that can be cancelled via context
-func (cm *simpleContextManager) ExecuteWithContext(ctx context.Context, task func() error) error {
-	// TODO: Implement task execution with context cancellation
-	// Hint: Run the task in a goroutine and use select with ctx.Done()
-	// Return context error if cancelled, task error if task fails
-	ch := make(chan error, 1)
-	go func() {
-		ch <- task()
-	}()
+// OptimizedSort is your optimized version of SlowSort
+// It should produce identical results but perform better
+func OptimizedSort(data []int) []int {
+	// TODO: Implement a more efficient sorting algorithm
+	// Hint: Consider using sort package or a more efficient algorithm
+	sort.Ints(data)
+	return data // Replace this with your optimized implementation
+}
 
-	select {
-	case <-ctx.Done():
-		return ctx.Err()
-	case err := <-ch:
-		return err
+// InefficientStringBuilder builds a string by repeatedly concatenating
+// TODO: Optimize this function to be more efficient
+func InefficientStringBuilder(parts []string, repeatCount int) string {
+	result := ""
+
+	for i := 0; i < repeatCount; i++ {
+		for _, part := range parts {
+			result += part
+		}
 	}
+
+	return result
 }
 
-// WaitForCompletion waits for a duration or until context is cancelled
-func (cm *simpleContextManager) WaitForCompletion(ctx context.Context, duration time.Duration) error {
-	// TODO: Implement waiting with context awareness
-	// Hint: Use select with ctx.Done() and time.After(duration)
-	// Return context error if cancelled, nil if duration completes
-	select {
-	case <-ctx.Done():
-		return ctx.Err()
-	case <-time.After(duration):
-		return nil
+// OptimizedStringBuilder is your optimized version of InefficientStringBuilder
+// It should produce identical results but perform better
+func OptimizedStringBuilder(parts []string, repeatCount int) string {
+	// TODO: Implement a more efficient string building method
+	// Hint: Consider using strings.Builder or bytes.Buffer
+	result := strings.Builder{}
+	for _, val := range parts {
+		result.WriteString(val)
+
 	}
+	str := result.String()
+	for range repeatCount - 1 {
+		result.WriteString(str)
+	}
+	return result.String() // Replace this with your optimized implementation
 }
 
-// Helper function - simulate work that can be cancelled
-func SimulateWork(ctx context.Context, workDuration time.Duration, description string) error {
-	start := time.Now()
-	fmt.Println("start work, ", workDuration, description)
+// ExpensiveCalculation performs a computation with redundant work
+// It computes the sum of all fibonacci numbers up to n
+// TODO: Optimize this function to be more efficient
+func ExpensiveCalculation(n int) int {
+	if n <= 0 {
+		return 0
+	}
+
 	sum := 0
-	for time.Since(start) < workDuration {
-		sum += 1
-		fmt.Println("working...")
-		time.Sleep(10 * time.Millisecond)
-		select {
-		case <-ctx.Done():
-			fmt.Println("cancel work")
-			return ctx.Err()
-		default:
-			continue
-		}
+	for i := 1; i <= n; i++ {
+		sum += fibonacci(i)
 	}
-	// TODO: Implement cancellable work simulation
-	// Hint: Use select with ctx.Done() and time.After(workDuration)
-	// Print progress messages and respect cancellation
-	fmt.Println("finish work")
-	return nil
+
+	return sum
 }
 
-// Helper function - process multiple items with context
-func ProcessItems(ctx context.Context, items []string) ([]string, error) {
-	// TODO: Implement batch processing with context awareness
-	// Process each item but check for cancellation between items
-	// Return partial results if cancelled
-	res := make([]string, 0, len(items))
-	for _, val := range items {
-		time.Sleep(100 * time.Millisecond)
-		res = append(res, "processed_"+val)
-		select {
-		case <-ctx.Done():
-			return res, ctx.Err()
-		default:
-			continue
-		}
+// Helper function that computes the fibonacci number at position n
+func fibonacci(n int) int {
+	if n <= 1 {
+		return n
 	}
-	return res, nil
+	return fibonacci(n-1) + fibonacci(n-2)
 }
 
-// Example usage
-func main() {
-	fmt.Println("Context Management Challenge")
-	fmt.Println("Implement the context manager methods!")
+// OptimizedCalculation is your optimized version of ExpensiveCalculation
+// It should produce identical results but perform better
+func OptimizedCalculation(n int) int {
+	// TODO: Implement a more efficient calculation method
+	// Hint: Consider memoization or avoiding redundant calculations
+	if n <= 1 {
+		return n
+	}
+	a, b := 1, 0
+	sum := 0
+	for range n - 1 {
+		sum += a
+		a, b = a+b, a
+	}
+	return sum + a // Replace this with your optimized implementation
+}
 
-	// Example of how the context manager should work:
-	cm := NewContextManager()
+// HighAllocationSearch searches for all occurrences of a substring and creates a map with their positions
+// TODO: Optimize this function to reduce allocations
+func HighAllocationSearch(text, substr string) map[int]string {
+	result := make(map[int]string)
 
-	// Create a cancellable context
-	ctx, cancel := cm.CreateCancellableContext(context.Background())
-	defer cancel()
+	// Convert to lowercase for case-insensitive search
+	lowerText := strings.ToLower(text)
+	lowerSubstr := strings.ToLower(substr)
 
-	// Add some values
-	ctx = cm.AddValue(ctx, "user", "alice")
-	ctx = cm.AddValue(ctx, "requestID", "12345")
+	for i := 0; i < len(lowerText); i++ {
+		// Check if we can fit the substring starting at position i
+		if i+len(lowerSubstr) <= len(lowerText) {
+			// Extract the potential match
+			potentialMatch := lowerText[i : i+len(lowerSubstr)]
 
-	// Use the context
-	fmt.Println("Context created with values!")
+			// Check if it matches
+			if potentialMatch == lowerSubstr {
+				// Store the original case version
+				result[i] = text[i : i+len(substr)]
+			}
+		}
+	}
+
+	return result
+}
+
+// OptimizedSearch is your optimized version of HighAllocationSearch
+// It should produce identical results but perform better with fewer allocations
+func OptimizedSearch(text, substr string) map[int]string {
+	// TODO: Implement a more efficient search method with fewer allocations
+	// Hint: Consider avoiding temporary string allocations and reusing memory
+	result := make(map[int]string)
+	if len(substr) == 0 || len(text) < len(substr) {
+		return result
+	}
+	for i := 0; i <= len(text)-len(substr); i++ {
+		if strings.EqualFold(text[i:i+len(substr)], substr) {
+			result[i] = text[i : i+len(substr)]
+		}
+	}
+
+	return result // Replace this with your optimized implementation
+}
+
+// A function to simulate CPU-intensive work for benchmarking
+// You don't need to optimize this; it's just used for testing
+func SimulateCPUWork(duration time.Duration) {
+	start := time.Now()
+	for time.Since(start) < duration {
+		// Just waste CPU cycles
+		for i := 0; i < 1000000; i++ {
+			_ = i
+		}
+	}
 }
