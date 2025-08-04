@@ -2,88 +2,58 @@ package main
 
 import (
 	"fmt"
-	"math"
-	"sort"
 )
 
 func main() {
-	a := []int{4, 4}
-	b := []int{3, 3}
-	fmt.Println(minCost1(a, b))
+	// a := []int{4, 2, 2, 4, 3, 3, 3, 3}
+	b := []int{5, 9, 9, 0, 9, 6, 9, 6, 9, 9, 9}
+	fmt.Println(totalFruit(b))
 }
-
-func minCost1(basket1 []int, basket2 []int) int64 {
-	b1 := make(map[int]int)
-	b2 := make(map[int]int)
-	var cost int
-	for _, fruit := range basket1 {
-		b1[fruit]++
+func totalFruit(fruits []int) int {
+	if len(fruits) <= 2 {
+		return len(fruits)
 	}
-	for _, fruit := range basket2 {
-		b2[fruit]++
-	}
-	for k, v := range b1 {
-		if (v+b2[k])%2 == 1 {
-			return -1
+	busketCountA, busketCountB := 1, 0
+	busketTypeA, busketTypeB := fruits[0], 0
+	maxCount := 0
+	curCount := 1
+	for i := 1; i < len(fruits); i++ {
+		if fruits[i] != busketTypeA && fruits[i] != busketTypeB {
+			if maxCount < curCount {
+				maxCount = curCount
+			}
+			if fruits[i-1] == busketTypeA {
+				curCount = busketCountA
+				busketTypeB = fruits[i]
+				busketCountB = 1
+				busketCountA = 0
+			} else if fruits[i-1] == busketTypeB {
+				curCount = busketCountB
+				busketTypeA = fruits[i]
+				busketCountA = 1
+				busketCountB = 0
+			}
+		} else if fruits[i] != busketTypeA || fruits[i] != busketTypeB {
+			if fruits[i] == busketTypeB {
+				busketCountA = 0
+				busketCountB++
+			} else {
+				busketCountB = 0
+				busketCountA++
+			}
+		} else {
+			if fruits[i] == busketTypeA {
+				busketCountA++
+			} else if fruits[i] == busketTypeB {
+				busketCountB++
+			}
 		}
-		cost += abs(v-b2[k]) / 2
+		curCount++
+		fmt.Printf("curCount: %d, typeA %d, CountA %d, typeB %d, countB: %d\n",
+			curCount, busketTypeA, busketCountA, busketTypeB, busketCountB)
 	}
-	for k, v := range b2 {
-		_, ok := b1[k]
-		if ok {
-			continue
-		}
-		if v%2 == 1 {
-			return -1
-		}
-		cost += v / 2
+	if curCount > maxCount {
+		maxCount = curCount
 	}
-	return int64(cost)
-}
-
-func minCost2(A, B []int) int64 {
-	freq := map[int]int{}
-	minVal := math.MaxInt
-	for _, x := range A {
-		freq[x]++
-		if x < minVal {
-			minVal = x
-		}
-	}
-	for _, x := range B {
-		freq[x]--
-		if x < minVal {
-			minVal = x
-		}
-	}
-
-	extra := []int{}
-	for k, v := range freq {
-		if v%2 != 0 {
-			return -1
-		}
-		for i := 0; i < abs(v)/2; i++ {
-			extra = append(extra, k)
-		}
-	}
-
-	sort.Ints(extra)
-	var cost int64
-	for i := 0; i < len(extra)/2; i++ {
-		cost += int64(min(extra[i], 2*minVal))
-	}
-	return cost
-}
-
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
+	return maxCount
 }
