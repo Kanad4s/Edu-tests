@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
 func main() {
@@ -11,20 +10,23 @@ func main() {
 	fmt.Println(makeFancyString("aabbbbrrreweewwww"))
 }
 
-func makeFancyString(s string) string {
-	res := strings.Builder{}
-	var letter rune
-	count := 0
-	for _, cur := range s {
-		if cur == letter {
-			count++
-		} else {
-			letter = cur
-			count = 0
-		}
-		if count < 2 {
-			res.WriteRune(cur)
-		}
+// Definition for a binary tree node.
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+func hasPathSum(root *TreeNode, targetSum int) bool {
+	return isPath(root, 0, targetSum)
+}
+
+func isPath(root *TreeNode, sum, target int) bool {
+	if root == nil {
+		return false
 	}
-	return res.String()
+	if root.Left == nil && root.Right == nil {
+		return root.Val+sum == target
+	}
+	return isPath(root.Left, sum+root.Val, target) || isPath(root.Right, sum+root.Val, target)
 }
