@@ -25,17 +25,19 @@ func pathSum(root *TreeNode, targetSum int) [][]int {
 	return res
 }
 
-func makePath(root *TreeNode, sum, target int, res *[][]int, cur []int) {
-	if root == nil {
-		return
-	}
-	cur = append(cur, root.Val)
-	if root.Left == nil && root.Right == nil {
-		if root.Val+sum == target {
-			*res = append(*res, cur)
+func numOfUnplacedFruits(fruits []int, baskets []int) int {
+	count := 0
+	for _, fruit := range fruits {
+		for j, basket := range baskets {
+			if fruit <= basket {
+				baskets[j] = 0
+				break
+			}
+			if j == len(baskets)-1 {
+				count++
+			}
 		}
-		return
+		// fmt.Println(baskets)
 	}
-	makePath(root.Left, sum+root.Val, target, res, cur)
-	makePath(root.Right, sum+root.Val, target, res, slices.Clone(cur))
+	return count
 }
