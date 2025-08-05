@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"slices"
 )
 
 func main() {
@@ -17,16 +18,24 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
-func hasPathSum(root *TreeNode, targetSum int) bool {
-	return isPath(root, 0, targetSum)
+func pathSum(root *TreeNode, targetSum int) [][]int {
+	res := make([][]int, 0)
+	cur := make([]int, 0)
+	makePath(root, 0, targetSum, &res, cur)
+	return res
 }
 
-func isPath(root *TreeNode, sum, target int) bool {
+func makePath(root *TreeNode, sum, target int, res *[][]int, cur []int) {
 	if root == nil {
-		return false
+		return
 	}
+	cur = append(cur, root.Val)
 	if root.Left == nil && root.Right == nil {
-		return root.Val+sum == target
+		if root.Val+sum == target {
+			*res = append(*res, cur)
+		}
+		return
 	}
-	return isPath(root.Left, sum+root.Val, target) || isPath(root.Right, sum+root.Val, target)
+	makePath(root.Left, sum+root.Val, target, res, cur)
+	makePath(root.Right, sum+root.Val, target, res, slices.Clone(cur))
 }
